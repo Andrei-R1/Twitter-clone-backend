@@ -1,11 +1,11 @@
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const router = Router();
 const prisma = new PrismaClient();
 
 // Get and Post methods for users
-router.get('/users', async (req, res) => {
+router.get("/users", async (req, res) => {
   const users = await prisma.user.findMany({
     include: {
       tweets: true,
@@ -13,12 +13,12 @@ router.get('/users', async (req, res) => {
       comments: true,
       followedBy: true,
       following: true,
-    }
+    },
   });
   res.json(users);
 });
 
-router.post('/users', async (req, res) => {
+router.post("/users", async (req, res) => {
   const result = await prisma.user.create({
     data: req.body,
   });
@@ -26,7 +26,7 @@ router.post('/users', async (req, res) => {
 });
 
 // Get, Put and Delete methods for users by id
-router.get('/users/:id', async (req, res) => {
+router.get("/users/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const getUser = await prisma.user.findUnique({
@@ -37,7 +37,7 @@ router.get('/users/:id', async (req, res) => {
         comments: true,
         followedBy: true,
         following: true,
-      }
+      },
     });
     if (getUser) {
       res.json(getUser);
@@ -46,9 +46,10 @@ router.get('/users/:id', async (req, res) => {
     }
   } catch (e) {
     res.json({ error: `User with id: ${id} does not exist` });
-}});
+  }
+});
 
-router.put('/users/:id', async (req, res) => {
+router.put("/users/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const updateUser = await prisma.user.update({
@@ -61,14 +62,16 @@ router.put('/users/:id', async (req, res) => {
   }
 });
 
-router.delete('/users/:id', async (req, res) => {
+router.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
-  const user = await prisma.user.delete({
-    where: {
-      id: Number(id),
-    },
-  });
-  res.json(user);
+  try {
+    const deleteUser = await prisma.user.delete({
+      where: { id: Number(id) },
+    });
+    res.json(deleteUser);
+  } catch (e) {
+    res.json({ error: `User with id: ${id} does not exist` });
+  }
 });
 
 export default router;
