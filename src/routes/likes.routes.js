@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 // Get and Post methods for likes
 router.get("/likes", async (req, res) => {
   const likes = await prisma.like.findMany({
-    include: {
+    select: {
+      id: true,
       user: true,
       tweet: true,
     },
@@ -28,7 +29,8 @@ router.get("/likes/:id", async (req, res) => {
   try {
     const getLike = await prisma.like.findUnique({
       where: { id: Number(id) },
-      include: {
+      select: {
+        id: true,
         user: true,
         tweet: true,
       },
