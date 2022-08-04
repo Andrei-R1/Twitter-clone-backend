@@ -11,8 +11,16 @@ router.get("/users", async (req, res) => {
       tweets: true,
       likes: true,
       comments: true,
-      followedBy: true,
-      following: true,
+      followedBy: {
+        select: {
+          follower: true,
+        },
+      },
+      following: {
+        select: {
+          following: true,
+        },
+      },
     },
   });
   res.json(users);
@@ -35,8 +43,16 @@ router.get("/users/:id", async (req, res) => {
         tweets: true,
         likes: true,
         comments: true,
-        followedBy: true,
-        following: true,
+        followedBy: {
+          select: {
+            follower: true,
+          },
+        },
+        following: {
+          select: {
+            following: true,
+          },
+        },
       },
     });
     if (getUser) {
