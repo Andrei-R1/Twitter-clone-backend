@@ -8,9 +8,13 @@ const prisma = new PrismaClient();
 router.get("/users", async (req, res) => {
   const users = await prisma.user.findMany({
     include: {
-      tweets: true,
+      tweets: { include: { 
+        user: true,
+        likes: true,
+        comments: { include: { user: true, }, },
+       }, },
       likes: true,
-      comments: true,
+      comments: { include: { user: true, }, },
       followedBy: {
         select: {
           follower: true,
@@ -40,9 +44,13 @@ router.get("/users/:id", async (req, res) => {
     const getUser = await prisma.user.findUnique({
       where: { id: Number(id) },
       include: {
-        tweets: true,
+        tweets: { include: { 
+          user: true,
+          likes: true,
+          comments: { include: { user: true, }, },
+         }, },
         likes: true,
-        comments: true,
+        comments: { include: { user: true, }, },
         followedBy: {
           select: {
             follower: true,

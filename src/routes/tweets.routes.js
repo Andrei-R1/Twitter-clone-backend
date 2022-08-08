@@ -10,7 +10,7 @@ router.get("/tweets", async (req, res) => {
     include: {
       user: true,
       likes: true,
-      comments: true,
+      comments: { include: { user: true, }, },
     },
   });
   res.json(tweets);
@@ -32,7 +32,7 @@ router.get("/tweets/:id", async (req, res) => {
       include: {
         user: true,
         likes: true,
-        comments: true,
+        comments: { include: { user: true, }, },
       },
     });
     if (getTweet) {
